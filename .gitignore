@@ -1,2 +1,13 @@
-*/node_modules/
+# test data and test file
+load_data.py
+test_data.json
+*fake*
+
+# virtual environment
 venv/
+
+api/
+backend/furever_backend/institutions/
+backend/furever_backend/db.sqlite3
+*/*/*/__pycache__/
+backend/furever_backend/furever_backend/__pycache__/
