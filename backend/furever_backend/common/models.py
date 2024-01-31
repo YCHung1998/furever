@@ -1,4 +1,21 @@
+"""
+This file contains the Django models for the common functionality of the Furever backend application.
+
+The models defined in this file represent the entities such as Institution, Pet, Member, and their relationships.
+These models are used to store and manage information about institutions, pets, members, and their interactions.
+
+The models include fields for various attributes such as name, introduction, adoption conditions, follow-up quality,
+support services, successful adoption cases, pet location, donation account, chip conversion assistance, adoption processes,
+and more.
+
+Additionally, there are relationship models such as PetMemberRelationship and InstitutionPetRelationship that represent
+the associations between pets, members, and institutions.
+
+The file also includes example code for creating instances of these models and performing queries using Django's ORM.
+"""
+
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Institution(models.Model):
@@ -8,10 +25,28 @@ class Institution(models.Model):
     institution_intro         = models.CharField(max_length=150)
 
 
+class InstitutionExtension(models.Model):
+    institution               = models.OneToOneField(Institution, on_delete=models.CASCADE, default=None)
+    adopt_condition           = models.TextField()
+    follow_up_quality         = models.TextField()
+    support_service           = models.TextField()
+    # contact                   = models.ForeignKey('Contact', on_delete=models.CASCADE, default=None)
+    successful_adoption_case  = models.TextField()
+    pets_location             = models.CharField(max_length=100)
+    donation_account          = models.IntegerField()
+    chip_conversion_assitance = models.BooleanField(default=False)
+    dog_adoption_process      = models.TextField(default=None)
+    cat_adoption_process      = models.TextField(default=None)
+
+
 class Pet(models.Model):
     name = models.CharField(max_length=128)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, default=None)
     members = models.ManyToManyField("Member", related_name="attention_member", default=None)
+
+class PetExtension(models.Model):
+    pet = models.OneToOneField(Pet, on_delete=models.CASCADE, default=None)
+
 
 class Member(models.Model):
     name = models.CharField(max_length=128)
@@ -22,17 +57,27 @@ class Member(models.Model):
         help_text='The amount of money that the member can spend on pets'
     )
 
+
+class MemberExtension(models.Model):
+    member = models.OneToOneField(Member, on_delete=models.CASCADE, default=None)
+    address = models.CharField(max_length=128)
+
 # # relationship between pet and member
-# class PetMemberRelationship(models.Model):
-#     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, default=None)
-#     member = models.ForeignKey(Member, on_delete=models.CASCADE, default=None)
-#     member_status = models.CharField(max_length=100) # subscribe adoption 申請
+# 使用時機: 1. 會員關注狗 2. 會員申請領養狗
+# 會員關注狗: 會員可以關注多隻狗, 一隻狗可以被多個會員關注
+class PetMemberRelationship(models.Model):
+    pet           = models.ForeignKey(Pet, on_delete=models.CASCADE, default=None)
+    member        = models.ForeignKey(Member, on_delete=models.CASCADE, default=None)
+    member_status = models.CharField(max_length=100) # subscribe adoption 申請
+    updated_at    = models.DateTimeField(auto_now=True, editable=True)
 
 # # 機構抓狗的 刊登未刊登相關資料
-# class InstitutionPetRelationship(models.Model):
-#     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, default=None)
-#     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, default=None)
-#     pet_status = models.CharField(max_length=100) # publish , unpublish, adoption
+class InstitutionPetRelationship(models.Model):
+    institution              = models.ForeignKey(Institution, on_delete=models.CASCADE, default=None)
+    pet                      = models.ForeignKey(Pet, on_delete=models.CASCADE, default=None)
+    pet_status               = models.CharField(max_length=100)  # publish, unpublish, adoption
+    signup_updated_at        = models.DateTimeField(auto_now=True, editable=False)
+    change_status_updated_at = models.DateTimeField(auto_now=True, editable=True)
 
 
 class BigChart(models.Model): # similar to the membership
@@ -49,13 +94,10 @@ class BigChart(models.Model): # similar to the membership
     status = models.IntegerField(default=0)     
 
 
-'''
+"""
 python manage.py makemigrations common
 python manage.py migrate common
-
-
 python manage.py shell
-
 
 from common.models import Institution, Pet, Member, BigChart
 
@@ -86,4 +128,4 @@ member1 = Member.objects.create(name='first member',budget=5000)
 member2 = Member.objects.create(name='second member',budget=500)
 member3 = Member.objects.create(name='third member',budget=10000)
 
-'''
+"""
