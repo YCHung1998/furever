@@ -6,8 +6,12 @@ test_data.json
 # virtual environment
 venv/
 
-api/
-backend/furever_backend/institutions/
-backend/furever_backend/db.sqlite3
-*/*/*/__pycache__/
-backend/furever_backend/furever_backend/__pycache__/
+# api/
+# backend/furever_backend/institutions/
+# backend/furever_backend/db.sqlite3
+# */*/*/__pycache__/
+# backend/furever_backend/furever_backend/__pycache__/
+# https://blog.csdn.net/Wang_Jiankun/article/details/84645646
+# foreginkey 實現一對多 一機構對多狗，在狗表下用foregin key指向機構
+# one to one 一對一，一個狗只能有一個狗詳細資料，pet <-> petextension
+# many to many 多對多，一個狗可以有多個tag，一個tag可以有多個狗，pet <-> tag
