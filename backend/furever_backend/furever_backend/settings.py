@@ -39,13 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    # 'institutions',
-    'institutions.apps.InstitutionsConfig',
-
-    # for test the many to many
-    'members.apps.MembersConfig',
-    'pets.apps.PetsConfig',
-
+    'common.apps.CommonConfig',        
 ]
 
 MIDDLEWARE = [
