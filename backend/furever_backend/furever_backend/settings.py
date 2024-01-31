@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     # 'institutions',
     'institutions.apps.InstitutionsConfig',
 
+    # for test the many to many
+    'members.apps.MembersConfig',
+    'pets.apps.PetsConfig',
+
 ]
 
 MIDDLEWARE = [
